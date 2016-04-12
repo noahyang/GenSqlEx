@@ -1,0 +1,61 @@
+<project name="GenSql" default="execute.class">
+
+	<echo message="1.define variables~" />
+	<property file="build.properties" />
+	<property name="bin" value="./bin" />
+	<property name="libs" value="./libs" />
+	<property name="dist" value="./dist" />
+
+	<echo message="2.define external.jars.path" />
+	<path id="external.jars.path">
+		<fileset dir="${libs}">
+			<include name="**/*.jar" />
+		</fileset>
+	</path>
+
+	<target name="prepare">
+		<echo message="3.prepare" />
+		<mkdir dir="${dist}" />
+	</target>
+
+	<target name="execute.class">
+		<echo message="${name}.execute" />
+		<java classname="${entry.class}" classpath="${bin}" fork="true">
+			<sysproperty key="file.encoding" value="UTF-8" />
+			<classpath refid="external.jars.path" />
+		</java>
+	</target>
+
+	<!-- 优点：所依赖的外部 jar 包的名称不用再一一写出了 -->
+	<target name="package2jar" depends="prepare">
+		<echo message="${name}.package2jar" />
+		<jar destfile="${dist}/${name}${version}.jar" basedir="${bin}">
+			<manifest>
+				<attribute name="App-Name" value="${name}" />
+				<attribute name="App-Version" value="${version}" />
+				<attribute name="App-Author" value="${author}" />
+				<attribute name="Created-By" value="${author}" />
+				<attribute name="Main-Class" value="${entry.class}" />
+			</manifest>
+			<zipgroupfileset dir="${libs}" includes="**/*.jar" />
+		</jar>
+	</target>
+
+	<target name="execute.jar" depends="package2jar">
+		<echo message="${name}.jar.execute" />
+		<java fork="true" failonerror="true" jar="${dist}/${name}${version}.jar">
+			<sysproperty key="file.encoding" value="UTF-8" />
+		</java>
+	</target>
+
+	<target name="copy2desktop" depends="package2jar">
+		<echo message="${name}.copy2desktop" />
+		<copy file="${dist}/${name}${version}.jar" tofile="${desktop}/${name}${version}.jar" />
+	</target>
+
+	<target name="clean">
+		<delete file="${dist}/${name}${version}.jar" />
+		<delete dir="${dist}" />
+	</target>
+
+</project>
