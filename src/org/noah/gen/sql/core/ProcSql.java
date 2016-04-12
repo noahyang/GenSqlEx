@@ -5,7 +5,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.noah.gen.sql.bean.MetaDesc;
-import org.noah.gen.sql.gui.IProc;
 import org.noah.gen.sql.utils.GsFunc;
 import org.noah.gen.sql.utils.IOBridge;
 import org.noah.gen.sql.utils.SqliteUtil;
@@ -42,20 +41,14 @@ public class ProcSql implements IProc {
 		} else if (file.isDirectory()) {
 			// 拽入单个文件夹
 			for (File item : file.listFiles()) {
-				if (item.isDirectory()) {
-					continue;
-				}
+				if (item.isDirectory()) continue;
 				if (item.getName().equals(FILE_NAME_SPEC)) {
 					String strTemp = IOBridge.toString(item, "utf-8");
 					File fDb = new File(strTemp);
-					if (fDb.exists() && fDb.isFile()) {
-						absPathDb = strTemp;
-					}
+					if (fDb.exists() && fDb.isFile()) absPathDb = strTemp;
 					continue;
 				}
-				if (!item.getName().endsWith(SUFFIX_SPEC)) {
-					continue;
-				}
+				if (!item.getName().endsWith(SUFFIX_SPEC)) continue;
 				fileList.add(item);
 			}
 		}
@@ -86,16 +79,12 @@ public class ProcSql implements IProc {
 			}
 			String strDst = md.toSql();
 			// 执行 sql 片段（分块执行执行是为了方便排错）
-			if (su != null) {
-				su.execSql(strDst);
-			}
+			if (su != null) su.execSql(strDst);
 			// 追加
 			sb.append(strDst).append(TOKEN_SPLIT);
 		}
 		// 关闭数据库连接
-		if (su != null) {
-			su.closeConn();
-		}
+		if (su != null) su.closeConn();
 		// 将成品 sql 置入系统剪贴板
 		GsFunc.setContents(sb.toString());
 	}

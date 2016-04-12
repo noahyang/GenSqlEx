@@ -9,6 +9,7 @@ import java.awt.dnd.DropTarget;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 
+import org.noah.gen.sql.core.IProc;
 import org.noah.gen.sql.core.ProcSql;
 import org.noah.gen.sql.gui.sub.AWTEventListenerEx;
 import org.noah.gen.sql.gui.sub.ImgJp;

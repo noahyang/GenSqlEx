@@ -1,11 +1,10 @@
-package org.noah.gen.sql.gui;
+package org.noah.gen.sql.core;
 
 /**
  * @author noah.yang
  *
  */
 public interface IProc {
-	
 	/**
 	 * @param strAbsPath
 	 */

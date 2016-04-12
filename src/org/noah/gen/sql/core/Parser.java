@@ -27,15 +27,7 @@ public class Parser {
 	// 构造函数
 	public Parser() {}
 	/**
-	 * 将
-	 * +:a,b$,c,e@,f@
-	 * 分别翻译成（x 表示自动识别，既可能为 $，也可能为 @）
-	 * 0x,1$,2x,4@,5@
-	 * ----------*----------
-	 * 将
-	 * f-:b,c
-	 * 翻译成
-	 * 0x,3x,4x,5x
+	 * 将 “+:a,b$,c,e@,f@” 转换成 “{0,auto},{1,num},{2,auto},{3,str},{4,str}”
 	 * @param list
 	 * @param args
 	 * @param sheet
@@ -44,36 +36,25 @@ public class Parser {
 	 */
 	public static String parse(List<Field> list, String args, Sheet sheet, int rowBegin) {
 		// 检查字符串格式是否合法
-		if (!args.contains(SPLITTER)) {
-			return "Error: Have no \"" + SPLITTER + "\"";
-		}
+		if (!args.contains(SPLITTER)) return "Error: Have no \"" + SPLITTER + "\"";
 		// Lr: Left & Right
 		String[] ssLr = args.split(SPLITTER);
-		if (2 != ssLr.length) {
-			return "Error: 2 != ssLr.length";
-		}
+		if (2 != ssLr.length) return "Error: 2 != ssLr.length";
 		String strLeft = ssLr[0];
 		String strRight = ssLr[1];
 		if (!strLeft.contains(SOLU_POS) && !strLeft.contains(SOLU_NEG)) {
 			return "Error: strLeft must be \"" + SOLU_POS + "\" or \"" + SOLU_NEG + "\"!";
 		}
-		// 判定是 “正取” 还是 “反取”
-		if (strLeft.contains(SOLU_NEG)) {
-			// “反取” 感觉意义不是很大，最近几年都不打算实现了
-			return "Error: Unimplemented!";
-		}
+		// 判定是 “正取” 还是 “反取”（“反取” 感觉意义不是很大，最近几年都不打算实现了）
+		if (strLeft.contains(SOLU_NEG)) return "Error: Unimplemented!";
 		String[] ssMt = strRight.split(",");
 		// 安全检查
 		for (String item : ssMt) {
 			// 不能包含空串
-			if ("" == item) {
-				return "Error: \"\" == item";
-			}
+			if ("" == item) return "Error: \"\" == item";
 			// a~z，26 个字段还不够用？
 			int length = item.length();
-			if (2 < length) {
-				return "Error: 2 < length";
-			}
+			if (2 < length) return "Error: 2 < length";
 		}
 		// 正式处理
 		for (String item : ssMt) {
@@ -88,9 +69,7 @@ public class Parser {
 //					e.printStackTrace();
 				}
 				FieldType type = FieldType.kFieldTypeStr;
-				if (null != fValue) {
-					type = FieldType.kFieldTypeNum;
-				}
+				if (null != fValue) type = FieldType.kFieldTypeNum;
 				list.add(new Field(num, type));
 			} else {
 				// 人为识别
